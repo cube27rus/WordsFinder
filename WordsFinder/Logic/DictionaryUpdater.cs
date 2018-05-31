@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WordsFinder.Logic
 {
-    public class DictionaryUpdater
+    public static class DictionaryUpdater
     {
         public static void MergeTwoDictionary(ref Dictionary<string, int> generalDictionary, Dictionary<string, int> sourceDictionary)
         {
@@ -22,7 +22,7 @@ namespace WordsFinder.Logic
             }
         }
 
-        public static Dictionary<T, T1> SaveTenLargestValues<T, T1>(Dictionary<T, T1> refDictionary)
+        public static Dictionary<T, T1> SaveTenLargestValues<T, T1>(this Dictionary<T, T1> refDictionary)
         {
            return refDictionary.OrderByDescending(r => r.Value).Take(10).ToDictionary(pair => pair.Key, pair => pair.Value);
         }

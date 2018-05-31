@@ -26,7 +26,7 @@ namespace WordsFinder.Logic
                 }
                 
             }
-            countWords = DictionaryUpdater.SaveTenLargestValues(countWords);
+            countWords.SaveTenLargestValues();
             return countWords;  
         }
     }
