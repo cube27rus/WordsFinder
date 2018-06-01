@@ -9,16 +9,38 @@ namespace WordsFinder.Logic
     {
         public static void MergeTwoDictionary(ref Dictionary<string, int> generalDictionary, Dictionary<string, int> sourceDictionary)
         {
-            foreach (KeyValuePair<string, int> entry in sourceDictionary)
+            if (generalDictionary.Count == 0)
             {
-                if (generalDictionary.ContainsKey(entry.Key))
+                generalDictionary = sourceDictionary;
+            }
+            else
+            {
+                List<String> usedKey = new List<string>();
+
+                foreach (KeyValuePair<string, int> entry in sourceDictionary)
                 {
-                    generalDictionary[entry.Key] += entry.Value;
+                    if (generalDictionary.ContainsKey(entry.Key))
+                    {
+                        generalDictionary[entry.Key] += entry.Value;
+                        usedKey.Add(entry.Key);
+                    }
                 }
-                else
+                
+                for (int i = generalDictionary.Count - 1; i >= 0; i--)
                 {
-                    generalDictionary.Add(entry.Key, entry.Value);
+                    var item = generalDictionary.ElementAt(i);
+                    var itemKey = item.Key;
+                    if (!usedKey.Contains(itemKey))
+                    {
+                        generalDictionary.Remove(itemKey);
+                    }
                 }
+                
+                if (generalDictionary.Count == 0)
+                {
+                    throw new Exception("Нет повторяющихся слов в файлах");
+                }
+
             }
         }
 

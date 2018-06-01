@@ -22,14 +22,9 @@ namespace WordsFinder
             ThreadMaker threadMaker = new ThreadMaker(fileInfos, 10);
             threadMaker.MakeThreads();
 
-            try
-            {
-                Thread.CurrentThread.Join();
-            }
-            catch (ThreadInterruptedException e)
-            {
-                Console.WriteLine("Нажмите любую клавишу, чтобы увидеть результаты");
-            }
+            Thread.Sleep(1000);
+            Console.WriteLine("Нажмите любую клавишу, чтобы увидеть результаты");
+            
             
             Console.ReadKey();
 
