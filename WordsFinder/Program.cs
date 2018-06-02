@@ -17,7 +17,8 @@ namespace WordsFinder
             Stack<FileInfo> fileInfos = new Stack<FileInfo>();
             fileInfos = FileFinder.DirSearch("..\\..\\..\\files","txt");
             
-            ThreadMaker threadMaker = new ThreadMaker(fileInfos, 10);
+            ThreadMaker threadMaker = new ThreadMaker( 10);
+            ThreadMaker.fileInfos = fileInfos;
             threadMaker.MakeThreads();
 
             Thread.Sleep(2000);

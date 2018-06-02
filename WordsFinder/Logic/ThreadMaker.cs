@@ -11,14 +11,12 @@ namespace WordsFinder.Logic
 {
     public class ThreadMaker
     {
-        private Func<Object> threadFunc;
-        private static Stack<FileInfo> fileInfos;
+        public static Stack<FileInfo> fileInfos;
         private int countOfThreads;
         public static object locker = new object();
 
-        public ThreadMaker(Stack<FileInfo> fileInfos, int countOfThreads)
+        public ThreadMaker(int countOfThreads)
         {
-            ThreadMaker.fileInfos = fileInfos;
             this.countOfThreads = countOfThreads;
         }
 
@@ -26,9 +24,12 @@ namespace WordsFinder.Logic
         {
             for (int i = 0; i < countOfThreads; i++)
             {
-                Thread thread = new Thread(RunWorkThread);
-                thread.IsBackground = true;
-                thread.Start(fileInfos.Pop());
+                if (fileInfos.Count != 0)
+                {
+                    Thread thread = new Thread(RunWorkThread);
+                    thread.IsBackground = true;
+                    thread.Start(fileInfos.Pop());
+                }
             }
         }
 
