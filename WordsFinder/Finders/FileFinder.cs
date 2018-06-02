@@ -7,6 +7,8 @@ namespace WordsFinder.Logic
 {
     public class FileFinder
     {
+        private static Stack<FileInfo> fileInfos = new Stack<FileInfo>();
+
         public static List<FileInfo> FindFiles(string path)
         {
             List<FileInfo> result = new List<FileInfo>();
@@ -17,6 +19,39 @@ namespace WordsFinder.Logic
             }
 
             return result;
+
+
+        }
+
+        public static Stack<FileInfo> DirSearch(string sDir,string extension)
+        {
+            try
+            {
+                var path = new DirectoryInfo(sDir);
+
+                var curentFiles = path.GetFiles($"*.{extension}");
+                foreach (var file in curentFiles)
+                {
+                     fileInfos.Push(file);
+                }
+
+                var directories = path.GetDirectories();
+                foreach (var d in directories)
+                {
+                    var files = d.GetFiles($"*.{extension}");
+                    foreach (var file in files)
+                    {
+                        fileInfos.Push(file);
+                    }
+                    DirSearch(d.FullName,extension);
+                }
+            }
+            catch (System.Exception excpt)
+            {
+                Console.WriteLine(excpt.Message);
+            }
+
+            return fileInfos;
         }
     }
 }

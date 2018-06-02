@@ -15,16 +15,13 @@ namespace WordsFinder
         static void Main(string[] args)
         {
             Stack<FileInfo> fileInfos = new Stack<FileInfo>();
-            foreach (var file in FileFinder.FindFiles("..\\..\\..\\files"))
-            {
-                fileInfos.Push(file);
-            }
+            fileInfos = FileFinder.DirSearch("..\\..\\..\\files","txt");
+            
             ThreadMaker threadMaker = new ThreadMaker(fileInfos, 10);
             threadMaker.MakeThreads();
 
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             Console.WriteLine("Нажмите любую клавишу, чтобы увидеть результаты");
-            
             
             Console.ReadKey();
 
@@ -34,7 +31,7 @@ namespace WordsFinder
             {
                 Console.WriteLine("word - {0}, count - {1}", entry.Key, entry.Value);
             }
-
+            
             Console.ReadKey();
 
         }

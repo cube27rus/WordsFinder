@@ -48,13 +48,26 @@ namespace WordsFinder.Logic
 
         public static void DoWork(FileInfo fileInfo)
         {
-            
             ThreadModel threadModel = new ThreadModel(fileInfo);
 
-            String text = File.ReadAllText(threadModel.fileInfo.FullName);
+            StringBuilder stringBuilder = new StringBuilder();
+            using (FileStream fs = File.Open(threadModel.fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (BufferedStream bs = new BufferedStream(fs))
+                {
+                    using (StreamReader sr = new StreamReader(bs))
+                    {
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            stringBuilder.Append(line);
+                        }
+                    }
+                }
+            }
 
+            String text = stringBuilder.ToString();
             Console.WriteLine(text);
-
             lock (locker)
             {
                 Dictionary<string, int> longestWords = WordFinder.FindLongestWord(text, 10);
