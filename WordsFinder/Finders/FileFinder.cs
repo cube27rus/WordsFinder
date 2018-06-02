@@ -38,11 +38,6 @@ namespace WordsFinder.Logic
                 var directories = path.GetDirectories();
                 foreach (var d in directories)
                 {
-                    var files = d.GetFiles($"*.{extension}");
-                    foreach (var file in files)
-                    {
-                        fileInfos.Push(file);
-                    }
                     DirSearch(d.FullName,extension);
                 }
             }
