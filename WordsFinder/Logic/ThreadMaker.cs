@@ -33,18 +33,18 @@ namespace WordsFinder.Logic
             }
         }
 
-        public void MakeThreadpoolThreads()
+        public void MakeThreadpoolThreads(int completionPortThreads)
         {
             while (fileInfos.Count != 0)
             {
                 ThreadPool.QueueUserWorkItem(RunWork, fileInfos.Pop());
-                ThreadPool.SetMaxThreads(countOfThreads, countOfThreads*2);
+                ThreadPool.SetMaxThreads(countOfThreads, completionPortThreads);
             }
         }
 
         public void MakeParallelLoopThreads()
         {
-            ParallelLoopResult result = Parallel.ForEach<FileInfo>(fileInfos,DoWork);
+            ParallelLoopResult result = Parallel.ForEach<FileInfo>(fileInfos, new ParallelOptions { MaxDegreeOfParallelism = countOfThreads },DoWork);
         }
 
         public static void DoWork(FileInfo fileInfo)
