@@ -35,10 +35,10 @@ namespace WordsFinder.Logic
 
         public void MakeThreadpoolThreads(int completionPortThreads)
         {
+            ThreadPool.SetMaxThreads(countOfThreads, completionPortThreads);
             while (fileInfos.Count != 0)
             {
                 ThreadPool.QueueUserWorkItem(RunWork, fileInfos.Pop());
-                ThreadPool.SetMaxThreads(countOfThreads, completionPortThreads);
             }
         }
 
@@ -68,7 +68,7 @@ namespace WordsFinder.Logic
             }
 
             String text = stringBuilder.ToString();
-            Console.WriteLine(text);
+           // Console.WriteLine(text);
             lock (locker)
             {
                 Dictionary<string, int> longestWords = WordFinder.FindLongestWord(text, 10);
