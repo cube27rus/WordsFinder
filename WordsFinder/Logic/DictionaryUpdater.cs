@@ -15,7 +15,7 @@ namespace WordsFinder.Logic
             }
             else
             {
-                List<String> usedKey = new List<string>();
+                List<string> usedKey = new List<string>();
 
                 foreach (KeyValuePair<string, int> entry in sourceDictionary)
                 {
@@ -41,6 +41,21 @@ namespace WordsFinder.Logic
                     throw new Exception("Нет повторяющихся слов в файлах");
                 }
 
+            }
+        }
+
+        public static void AppendDictionary(Dictionary<string, int> generalDictionary, Dictionary<string, int> sourceDictionary)
+        {
+            foreach (KeyValuePair<string, int> entry in sourceDictionary)
+            {
+                if (generalDictionary.ContainsKey(entry.Key))
+                {
+                    generalDictionary[entry.Key] += entry.Value;
+                }
+                else
+                {
+                    generalDictionary.Add(entry.Key,entry.Value);
+                }
             }
         }
 

@@ -19,7 +19,7 @@ namespace WordsFinder
             
             ThreadMaker threadMaker = new ThreadMaker( 10);
             ThreadMaker.fileInfos = fileInfos;
-            threadMaker.MakeThreadpoolThreads(10);
+            threadMaker.MakeThreads();
 
             Thread.Sleep(2000);
             Console.WriteLine("Нажмите любую клавишу, чтобы увидеть результаты");

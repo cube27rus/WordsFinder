@@ -28,7 +28,7 @@ namespace WordsFinder.Logic
                 {
                     Thread thread = new Thread(RunWorkThread);
                     thread.IsBackground = true;
-                    thread.Start(fileInfos.Pop());
+                    thread.Start();
                 }
             }
         }
@@ -46,12 +46,11 @@ namespace WordsFinder.Logic
         {
             ParallelLoopResult result = Parallel.ForEach<FileInfo>(fileInfos, new ParallelOptions { MaxDegreeOfParallelism = countOfThreads },DoWork);
         }
-
+        
         public static void DoWork(FileInfo fileInfo)
         {
+            Dictionary<string, int> longestWords = new Dictionary<string, int>();
             ThreadModel threadModel = new ThreadModel(fileInfo);
-
-            StringBuilder stringBuilder = new StringBuilder();
             using (FileStream fs = File.Open(threadModel.fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 using (BufferedStream bs = new BufferedStream(fs))
@@ -61,19 +60,17 @@ namespace WordsFinder.Logic
                         string line;
                         while ((line = sr.ReadLine()) != null)
                         {
-                            stringBuilder.Append(line);
+                            lock (locker)
+                            {
+                                DictionaryUpdater.AppendDictionary(longestWords, WordFinder.FindLongestWord(line, 10));
+                            }
+                            
                         }
                     }
                 }
             }
 
-            String text = stringBuilder.ToString();
-           // Console.WriteLine(text);
-            lock (locker)
-            {
-                Dictionary<string, int> longestWords = WordFinder.FindLongestWord(text, 10);
-                DictionaryUpdater.MergeTwoDictionary(ref ThreadModel.generalDictionary, longestWords);
-            }
+            DictionaryUpdater.MergeTwoDictionary(ref ThreadModel.generalDictionary, longestWords);
         }
 
         private static void RunWork(Object model)
@@ -91,25 +88,19 @@ namespace WordsFinder.Logic
 
         private static void RunWorkThread(Object model)
         {
-            FileInfo fileInfo = model as FileInfo;
-            if (fileInfo != null)
+            while (fileInfos.Count != 0)
             {
-                DoWork(fileInfo);
                 lock (fileInfos)
                 {
-                    if (fileInfos.Count != 0)
+                    FileInfo fileInfo;
+                    fileInfos.TryPop(out fileInfo);
+                    if (fileInfo != null)
                     {
-                        Thread thread = new Thread(RunWorkThread);
-                        thread.Start(fileInfos.Pop());
+                        DoWork(fileInfo);
                     }
                 }
             }
-            else
-            {
-                throw new ArgumentNullException("Passing model is not ThreadModel");
-            }
             
         }
-        
     }
 }
